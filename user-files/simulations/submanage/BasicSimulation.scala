@@ -34,7 +34,7 @@ class BasicSimulation extends Simulation {
     .userAgentHeader("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:16.0) Gecko/20100101 Firefox/16.0")
 
   val $token = "${csrf_token(0)}"
-  val $session = "${laravel_session(0)}"
+  val $session = "${submanage_session(0)}"
 
   val userFeeder = Iterator.from(0).map(i => Map(
     "email" -> s"test$i@example.com",
@@ -53,7 +53,7 @@ class BasicSimulation extends Simulation {
       http("GET /sanctum/csrf-cookie")
         .get("/sanctum/csrf-cookie")
           .check(headerRegex("Set-Cookie", "XSRF-TOKEN=(.*)%3D;").findAll.saveAs("csrf_token"))
-          .check(headerRegex("Set-Cookie", "laravel_session=(.*);").findAll.saveAs("laravel_session"))
+          .check(headerRegex("Set-Cookie", "submanage_session=(.*);").findAll.saveAs("submanage_session"))
     )
     .exec(
       http("POST /api/user/login")
@@ -62,7 +62,7 @@ class BasicSimulation extends Simulation {
           .formParam("email", "${email}")
           .formParam("password", "${password}")
             .check(headerRegex("Set-Cookie", "XSRF-TOKEN=(.*)%3D;").findAll.saveAs("csrf_token"))
-            .check(headerRegex("Set-Cookie", "laravel_session=(.*);").findAll.saveAs("laravel_session"))
+            .check(headerRegex("Set-Cookie", "submanage_session=(.*);").findAll.saveAs("submanage_session"))
     )
     .pause(5)
     .exec(
@@ -70,7 +70,7 @@ class BasicSimulation extends Simulation {
         .get("/api/service/list")
         .header("X-XSRF-TOKEN", $token)
           .check(headerRegex("Set-Cookie", "XSRF-TOKEN=(.*)%3D;").findAll.saveAs("csrf_token"))
-          .check(headerRegex("Set-Cookie", "laravel_session=(.*);").findAll.saveAs("laravel_session"))
+          .check(headerRegex("Set-Cookie", "submanage_session=(.*);").findAll.saveAs("submanage_session"))
     )
     .pause(10)
     .exec(
@@ -81,7 +81,7 @@ class BasicSimulation extends Simulation {
           .formParam("category_id", "1")
           .formParam("price", "100")
             .check(headerRegex("Set-Cookie", "XSRF-TOKEN=(.*)%3D;").findAll.saveAs("csrf_token"))
-            .check(headerRegex("Set-Cookie", "laravel_session=(.*);").findAll.saveAs("laravel_session"))
+            .check(headerRegex("Set-Cookie", "submanage_session=(.*);").findAll.saveAs("submanage_session"))
     )
     
   setUp(
